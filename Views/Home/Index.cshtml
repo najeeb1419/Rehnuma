@@ -1,0 +1,51 @@
+﻿@* @{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div> *@
+
+@* @model Rehnuma.Service.Models.QuranVerse *@
+
+<h1>Recitation Tool</h1>
+
+<div id="displayText"></div>
+<div id="error"></div>
+<div id="suggestion"></div>
+
+<button id="startRecitation">Start Recitation</button>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    let recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.lang = 'ar'; // Arabic language recognition
+
+    $('#startRecitation').click(function () {
+        recognition.start();
+    });
+
+    recognition.onresult = function (event) {
+        let transcript = event.results[event.results.length - 1][0].transcript.trim();
+        $('#displayText').text(transcript);
+
+        // Send current word to backend to check for the next word
+        $.ajax({
+            url: '/Recitation/GetNextWord',
+            method: 'POST',
+            data: { currentWord: transcript, verseIndex: 0 }, // Example verseIndex
+            success: function (data) {
+                if (data.correctWord !== transcript) {
+                    $('#error').text("Mistake detected!");
+                    $('#suggestion').text("Next word should be: " + data.correctWord);
+                    $('#displayText').css('color', 'red');
+                }
+            },
+            error: function () {
+                $('#error').text("An error occurred.");
+            }
+        });
+    };
+</script>

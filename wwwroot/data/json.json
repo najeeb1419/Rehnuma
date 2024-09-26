@@ -1,0 +1,13 @@
+[
+  {
+    "surah": 1,
+    "ayah": 1,
+    "text": "Bismillah-ir-Rahman-ir-Rahim"
+  },
+  {
+    "surah": 1,
+    "ayah": 2,
+    "text": "Alhamdulillahi Rabbil Aalamin"
+  }
+  // Add more verses here...
+]
